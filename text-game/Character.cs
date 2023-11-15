@@ -1,5 +1,4 @@
-﻿
-namespace text_game;
+﻿namespace text_game;
 
 internal class Character
 {
