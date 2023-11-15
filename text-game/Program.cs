@@ -9,45 +9,45 @@ internal class Program
 
     static void Game() 
     {
-        CreateCharacter();
+        GetCharacterDetails();
     }
 
-    static void CreateCharacter() 
+    static void GetCharacterDetails() 
     {
-        string name = GetValidString("Enter a name for your character", "name");
+        string name = GetValidName();
         string role = GetValidRole();
 
-        switch (role) 
+        int health; int attack; int defence;
+
+        switch (role.ToLower())
         {
             case "knight":
-                break;
-
-            case "assassin":
+                health = 5; attack = 3; defence = 3;
+                CreateCharacter(name, role, health, attack, defence);
                 break;
 
             case "ranger":
+                health = 5; attack = 2; defence = 1;
+                CreateCharacter(name, role, health, attack, defence);
                 break;
 
-            case "mage":
-                break;
-
-            default:
+            case "assassin":
+                health = 5; attack = 5; defence = 0;
+                CreateCharacter(name, role, health, attack, defence);
                 break;
         }
-
-        Character character = new(name, role, 1, 1, 1);
     }
 
-    static string GetValidString(string message, string subject)
+    static string GetValidName()
     {
         string? inputString;
 
         while (true)
         {
-            Console.WriteLine(message);
+            Console.WriteLine("Enter a name for your character");
             inputString = Console.ReadLine();
 
-            if (string.IsNullOrEmpty(inputString)) Console.WriteLine($"{subject} cannot be blank.");
+            if (string.IsNullOrEmpty(inputString)) Console.WriteLine($"name cannot be blank.");
             else break;
         }
         return inputString;
@@ -56,10 +56,11 @@ internal class Program
     static string GetValidRole() 
     {
         string? inputString;
+        HashSet<string> validRoles = new() { "knight", "ranger", "assassin" };
 
         while (true)
         {
-            Console.WriteLine("Enter a role for your character\n\n1 | Knight\n2 | Ranger\n3 | Mage\n4 | Assassion");
+            Console.WriteLine("\nEnter a role for your character\n\n\tKnight\n\tRanger\n\tAssassin");
             inputString = Console.ReadLine();
 
             if (string.IsNullOrEmpty(inputString)) 
@@ -68,14 +69,22 @@ internal class Program
                 continue;
             }
 
-            if (inputString != "1" && inputString != "2" && inputString != "3" && inputString != "4")
+            if (!validRoles.Contains(inputString.ToLower()))
             {
-                Console.WriteLine($"role must be one of the above.");
+                Console.WriteLine("Enter a valid role from above");
                 continue;
             }
+
 
             else break;
         }
         return inputString;
+    }
+
+    static void CreateCharacter(string name, string role, int health, int attack, int defence) 
+    {
+        Character character = new(name, role, health, attack, defence);
+        Console.WriteLine($"\nYour Character:\n\n\tName: {name}\n\tRole: {role}\n\n\tHealth {health}\n\tAttack: {attack}\n\tDefence: {defence}");
+        Console.ReadKey();
     }
 }
