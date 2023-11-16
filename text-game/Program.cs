@@ -1,90 +1,33 @@
-﻿namespace text_game;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace text_game;
 
 internal class Program
 {
-    static void Main()
-    {
-        Game();
-    }
+    static void Main() => Game();
 
     static void Game() 
     {
-        GetCharacterDetails();
+        GetCharacter();
     }
 
-    static void GetCharacterDetails() 
-    {
-        string name = GetValidName();
-        string role = GetValidRole();
-
-        int health; int attack; int defence;
-
-        switch (role.ToLower())
+    static void GetCharacter() 
+    { 
+        while (true) 
         {
-            case "knight":
-                health = 5; attack = 3; defence = 3;
-                CreateCharacter(name, role, health, attack, defence);
-                break;
+            Console.WriteLine("What will you be called?");
+            string? name = Console.ReadLine();
 
-            case "ranger":
-                health = 5; attack = 2; defence = 1;
-                CreateCharacter(name, role, health, attack, defence);
-                break;
-
-            case "assassin":
-                health = 5; attack = 5; defence = 0;
-                CreateCharacter(name, role, health, attack, defence);
-                break;
-        }
-    }
-
-    static string GetValidName()
-    {
-        string? inputString;
-
-        while (true)
-        {
-            Console.WriteLine("Enter a name for your character");
-            inputString = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(inputString)) Console.WriteLine($"name cannot be blank.");
-            else break;
-        }
-        return inputString;
-    }
-
-    static string GetValidRole() 
-    {
-        string? inputString;
-        HashSet<string> validRoles = new() { "knight", "ranger", "assassin" };
-
-        while (true)
-        {
-            Console.WriteLine("\nEnter a role for your character\n\n\tKnight\n\tRanger\n\tAssassin");
-            inputString = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(inputString)) 
-            { 
-                Console.WriteLine($"role cannot be blank."); 
-                continue;
-            }
-
-            if (!validRoles.Contains(inputString.ToLower()))
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) 
             {
-                Console.WriteLine("Enter a valid role from above");
+                Helpers.DisplayError("Your name must contain characters.");
+                Helpers.DisplayEnterPrompt();
                 continue;
             }
 
-
-            else break;
+            Console.Write($"\n\tYour name: ");
+            Helpers.DisplayColoured($"{name}\n\n", ConsoleColor.Green);
+            break;
         }
-        return inputString;
-    }
-
-    static void CreateCharacter(string name, string role, int health, int attack, int defence) 
-    {
-        Character character = new(name, role, health, attack, defence);
-        Console.WriteLine($"\nYour Character:\n\n\tName: {name}\n\tRole: {role}\n\n\tHealth {health}\n\tAttack: {attack}\n\tDefence: {defence}");
-        Console.ReadKey();
     }
 }
