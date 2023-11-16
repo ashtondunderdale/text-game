@@ -10,15 +10,16 @@ internal class Game
     private static int locationMaxX = 2;
     private static int locationMinX = -2;
 
-    private static string location = "laboratory";
+    private static string location = "wasteland";
 
     public static void PlayGame(Character character)
     {
         bool playingGame = true;
 
-        while (playingGame) 
-        { 
-        
+        while (playingGame)
+        {
+            Console.Clear();
+            DisplayPlayerInformation();            
         }
     }
 
@@ -62,7 +63,7 @@ internal class Game
         Helpers.DisplayEnterPrompt();
     }
 
-    public static bool ValidateCoordinate(string input)
+    public static bool ValidateCommand(string input)
     {
         if (input == "w")
         {
@@ -100,6 +101,28 @@ internal class Game
                 return false;
             }
         }
+        else if (input == "i") 
+        {
+            DisplayInventory();
+        }
         return true;
+    }
+
+    static void DisplayInventory() 
+    {
+        int itemIndex = 1;
+        if (Program.character.inventory.Count != 0)
+        {
+            foreach (var item in Program.character.inventory) 
+            {
+                Console.WriteLine("\n\nInventory\n_________________");
+                Console.WriteLine($"{itemIndex} | {item}");
+            }
+        }
+        else 
+        {
+            Helpers.ColouredText("\nYour inventory is empty", ConsoleColor.Yellow);
+        }
+        Helpers.DisplayEnterPrompt();
     }
 }

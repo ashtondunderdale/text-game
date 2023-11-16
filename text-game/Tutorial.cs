@@ -1,17 +1,19 @@
-﻿namespace text_game;
+﻿using System;
+
+namespace text_game;
 
 internal class Tutorial
 {
     public static void PlayTutorial() 
     {
         CreateCharacter();
-        DisplayIntro();
+        //DisplayIntro();
         StartLaboratoryTutorial();
     }
 
     static void CreateCharacter()
     {
-        List<string> inventory = new();    
+        List<string> inventory = new();
 
         while (true)
         {
@@ -62,6 +64,10 @@ internal class Tutorial
 
     public static void StartLaboratoryTutorial()
     {
+        Random random = new Random();
+        double encounterChance = 0.4;
+        bool foundTutorialWeapon = false;
+
         while (true)
         {
             Game.DisplayPlayerInformation();
@@ -78,6 +84,7 @@ internal class Tutorial
 
                 continue;
             }
+
             Game.UpdateCoordinate(input);
             break;
         }
@@ -118,17 +125,26 @@ internal class Tutorial
 
             string? input = Console.ReadLine();
 
-            if (input != "w" && input != "a" && input != "s" && input != "d")
+            if (input != "w" && input != "a" && input != "s" && input != "d" && input != "i")
             {
-                Helpers.DisplayError("Please enter a valid coordinate character.");
+                Helpers.DisplayError("Please enter a valid coordinate or command character.");
                 Helpers.DisplayEnterPrompt();
 
                 continue;
             }
 
-            if (Game.ValidateCoordinate(input))
+            if (Game.ValidateCommand(input))
             {
-                Game.UpdateCoordinate(input);
+                if (input != "i") 
+                {
+                    Game.UpdateCoordinate(input);
+
+                    if (random.NextDouble() <= encounterChance)
+                    {
+                        Game.DisplayPlayerInformation();
+                        RandomEncounter();
+                    }
+                }
             };
 
             if (Game.x == 0 && Game.y == 0)
@@ -166,6 +182,26 @@ internal class Tutorial
                     }
                 }
             }
+        }
+
+        void RandomEncounter()
+        {
+            double randomEncounterType = random.NextDouble();
+
+            if (randomEncounterType > 0.8)
+            {
+                Helpers.ColouredText("\n\nA mutant rat suddenly attacks you!", ConsoleColor.Red);
+                Helpers.DisplayEnterPrompt();
+
+            }
+            else if (randomEncounterType < 0.2 && foundTutorialWeapon == false)
+            {
+                Helpers.ColouredText("\n\nYou find a metal pipe on the floor!", ConsoleColor.Green);
+                Program.character.inventory.Add("metal pipe");
+                foundTutorialWeapon = true;
+                Helpers.DisplayEnterPrompt();
+            }
+            Console.Clear();
         }
     }
 }
