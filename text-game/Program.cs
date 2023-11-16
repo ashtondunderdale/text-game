@@ -8,10 +8,12 @@ internal class Program
 
     static void Game() 
     {
-        GetCharacter();
+        GetName();
+        DisplayIntro();
+        Tutorial();
     }
 
-    static void GetCharacter() 
+    static void GetName() 
     { 
         while (true) 
         {
@@ -22,12 +24,38 @@ internal class Program
             {
                 Helpers.DisplayError("Your name must contain characters.");
                 Helpers.DisplayEnterPrompt();
+
                 continue;
             }
 
+            name = name.Trim();
             Console.Write($"\n\tYour name: ");
-            Helpers.DisplayColoured($"{name}\n\n", ConsoleColor.Green);
+            Helpers.ColouredText($"{name}", ConsoleColor.Green);
+            Helpers.DisplayEnterPrompt();
+
             break;
         }
+    }
+
+    static void DisplayIntro() 
+    { 
+        Console.Clear();
+
+        Thread.Sleep(2000);
+        Helpers.TypeColouredText("The year is 27707.", ConsoleColor.White, 100);
+
+        Thread.Sleep(1500);
+        Helpers.TypeColouredText("\nYou woke up a few seconds ago.", ConsoleColor.White, 50);
+
+        Thread.Sleep(2000);
+        Helpers.TypeColouredText("\nYou cant remember much.", ConsoleColor.White, 80);
+
+        Thread.Sleep(2000);
+        Helpers.TypeColouredText("\n\nYou seem to be in a laboratory...", ConsoleColor.White, 50);
+    }
+
+    static void Tutorial() 
+    { 
+    
     }
 }
