@@ -5,6 +5,14 @@ internal class Program
     private static Character character;
     private static int x = 0;
     private static int y = 0;
+    private static string location = "laboratory:";
+
+    private static int locationMaxY = 2;
+    private static int locationMinY = -2;
+    private static int locationMaxX = 2;
+    private static int locationMinX = -2;
+
+
     static void Main() => Starter();
 
     static void Starter()
@@ -85,8 +93,6 @@ internal class Program
             break;
         }
 
-
-
         while (true)
         {
             DisplayPlayerInformation();
@@ -114,6 +120,62 @@ internal class Program
         DisplayPlayerInformation();
         Console.WriteLine("\n\nHere you can see your location has updated again.\nTry exploring the rest of the laboratory.");
         Helpers.DisplayEnterPrompt();
+
+        bool tutorialMode = true;
+
+        while (tutorialMode) 
+        {
+            DisplayPlayerInformation();
+
+            string? input = Console.ReadLine();
+
+            if (input != "u" && input != "d" && input != "l" && input != "r")
+            {
+                Helpers.DisplayError("Please enter a valid coordinate character.");
+                Helpers.DisplayEnterPrompt();
+
+                continue;
+            }
+
+            if (ValidateCoordinate(input))
+            {
+                UpdateCoordinate(input);
+            };
+
+            if (x == 0 && y == 0) 
+            {
+                Console.WriteLine("You are back where you woke up.");
+                Helpers.DisplayEnterPrompt();
+            }
+
+            if (x == 2 && y == 2) 
+            {
+                while (true)
+                {
+                    DisplayPlayerInformation();
+
+                    Console.WriteLine("\n\nYou have found an exit.\nDo you leave the laboratory? ( y / n )");
+                    input = Console.ReadLine();
+
+                    if (input == "y") 
+                    {
+                        tutorialMode = false;
+                        break;
+                    }
+                    else if (input == "n")
+                    {
+                        Helpers.ColouredText("\nYou stay in the laboratory.", ConsoleColor.Yellow);
+                        Helpers.DisplayEnterPrompt();
+                        break;
+                    }
+                    else
+                    {
+                        Helpers.DisplayError("Enter a valid option ( y / n )");
+                        Helpers.DisplayEnterPrompt();
+                    }
+                }
+            }
+        }
     }
     static void DisplayPlayerInformation()
     {
@@ -123,7 +185,9 @@ internal class Program
         Console.Write($"\nHealth:");
         Helpers.ColouredText($" {character.health}", ConsoleColor.Red);
 
-        Console.WriteLine($"\n\nCurrent Location: x {x}, y {y}\n__________________________");
+        Console.Write($"\n\nLocation: {location}\n");
+
+        Console.WriteLine($"Coordinates: x {x}, y {y}\n__________________________");
     }
 
     static void UpdateCoordinate(string coordinate)
@@ -153,8 +217,49 @@ internal class Program
         Helpers.DisplayEnterPrompt();
     }
 
+    static bool ValidateCoordinate(string input) 
+    {
+        if (input == "u") 
+        {
+            if (y + 1 > locationMaxY) 
+            {
+                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
+                Helpers.DisplayEnterPrompt();
+                return false;
+            }
+        }
+        else if (input == "d")
+        {
+            if (y - 1 < locationMinY)
+            {
+                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
+                Helpers.DisplayEnterPrompt();
+                return false;
+            }
+        }
+        else if (input == "l")
+        {
+            if (x - 1 < locationMinX)
+            {
+                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
+                Helpers.DisplayEnterPrompt();
+                return false;
+            }
+        }
+        else if (input == "r")
+        {
+            if (x + 1 > locationMaxX)
+            {
+                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
+                Helpers.DisplayEnterPrompt();
+                return false;
+            }
+        }
+        return true;
+    }
+
     static void Game()
     {
-
+        Console.WriteLine("You are now in the game.");
     }
 }
