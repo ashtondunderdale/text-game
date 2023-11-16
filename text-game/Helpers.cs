@@ -37,13 +37,13 @@
         /// <param name="text">The text to type.</param>
         /// <param name="color">The colour of the text.</param>
         /// <param name="typeSpeed">the speed to display characters</param>
-        public static void TypeColouredText(string text, ConsoleColor color, int typeSpeed)
+        public static void TypeColouredText(string text, ConsoleColor color, int sleepDuration)
         {
             Console.ForegroundColor = color;
             foreach (char c in text)
             {
                 Console.Write(c);
-                Thread.Sleep(typeSpeed);
+                Thread.Sleep(sleepDuration);
             }
             Console.ResetColor();
             Console.WriteLine();

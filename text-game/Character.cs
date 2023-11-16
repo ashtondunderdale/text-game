@@ -3,9 +3,9 @@
 internal class Character
 {
     public string name;
-    public string health;
+    public int health;
 
-    public Character(string name, string health)
+    public Character(string name, int health)
     {
         this.name = name;
         this.health = health;
