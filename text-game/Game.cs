@@ -26,10 +26,10 @@ internal class Game
     public static void DisplayPlayerInformation()
     {
         Console.Write($"Name:");
-        Helpers.ColouredText($" {Program.character.name}", ConsoleColor.Green);
+        Helpers.ColouredText($" {Program.character.Name}", ConsoleColor.Green);
 
         Console.Write($"\nHealth:");
-        Helpers.ColouredText($" {Program.character.health}", ConsoleColor.Red);
+        Helpers.ColouredText($" {Program.character.Health}", ConsoleColor.Red);
 
         Console.Write($"\n\nLocation: {location}\n");
 
@@ -111,9 +111,9 @@ internal class Game
     static void DisplayInventory() 
     {
         int itemIndex = 1;
-        if (Program.character.inventory.Count != 0)
+        if (Program.character.Inventory.Count != 0)
         {
-            foreach (var item in Program.character.inventory) 
+            foreach (var item in Program.character.Inventory) 
             {
                 Console.WriteLine("\n\nInventory\n_________________");
                 Console.WriteLine($"{itemIndex} | {item}");

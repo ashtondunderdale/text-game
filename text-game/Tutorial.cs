@@ -34,6 +34,7 @@ internal class Tutorial
             Helpers.DisplayEnterPrompt();
 
             Program.character = new Character(name, 10, 1, inventory);
+            Program.character.EquipWeapon(new Unequipped());
             break;
         }
     }
@@ -188,20 +189,82 @@ internal class Tutorial
         {
             double randomEncounterType = random.NextDouble();
 
-            if (randomEncounterType > 0.8)
+            if (randomEncounterType < 0.5)
             {
-                Helpers.ColouredText("\n\nA mutant rat suddenly attacks you!", ConsoleColor.Red);
-                Helpers.DisplayEnterPrompt();
+                MutantRat mutantRat = new();
+                Helpers.ColouredText($"\n\nA {mutantRat.Name} suddenly attacks you!", ConsoleColor.Red);
 
+                while (mutantRat.IsAlive() && Program.character.IsAlive())
+                {
+                    Helpers.DisplayEnterPrompt();
+                    Game.DisplayPlayerInformation();
+                    Helpers.ColouredText("\n\nChoose your action\n\n", ConsoleColor.Yellow);
+                    Console.WriteLine("\t1. Attack");
+                    Console.WriteLine("\t2. Flee");
+
+                    string choice = Console.ReadLine();
+
+                    switch (choice)
+                    {
+                        case "1":
+                            int playerDamage = Program.character.Attack();
+                            mutantRat.TakeDamage(playerDamage);
+                            Helpers.ColouredText($"\nYou dealt {playerDamage} damage to the {mutantRat.Name}!", ConsoleColor.Yellow);
+                            Helpers.DisplayEnterPrompt();
+                            break;
+
+                        case "2":
+                            Helpers.ColouredText($"\nYou chose to flee from the {mutantRat.Name}.", ConsoleColor.Yellow);
+                            Helpers.DisplayEnterPrompt();
+                            return;
+
+                        default:
+                            Helpers.DisplayError("Invalid choice. Please enter 1 to attack or 2 to flee.");
+                            continue; 
+                    }
+
+                    int ratDamage = mutantRat.Attack();
+                    Program.character.TakeDamage(ratDamage);
+                    Game.DisplayPlayerInformation();
+
+                    Helpers.ColouredText($"\n\nThe {mutantRat.Name} dealt {ratDamage} damage to you!\n", ConsoleColor.Red);
+
+                    Helpers.ColouredText($"\n\tYour Health: {Program.character.Health}\n\t{mutantRat.Name}'s Health: {mutantRat.Health}", ConsoleColor.Yellow);
+
+                    if (!mutantRat.IsAlive())
+                    {
+                        Helpers.ColouredText($"\n\tYou defeated the {mutantRat.Name}!", ConsoleColor.Green);
+                    }
+                    else if (!Program.character.IsAlive())
+                    {
+                        Helpers.ColouredText($"\n\nThe {mutantRat.Name} defeated you. Game over.", ConsoleColor.Red);
+                        Helpers.DisplayEnterPrompt();
+                        GameOver();
+                    }
+                }
+
+                Helpers.DisplayEnterPrompt();
             }
+
             else if (randomEncounterType < 0.2 && foundTutorialWeapon == false)
             {
                 Helpers.ColouredText("\n\nYou find a metal pipe on the floor!", ConsoleColor.Green);
-                Program.character.inventory.Add("metal pipe");
+                Helpers.ColouredText("It has been automatically equipped.", ConsoleColor.Yellow);
+
+                Weapon metalPipe = new();
+                Program.character.Inventory.Add(metalPipe.Name);
+                Program.character.EquipWeapon(metalPipe);
+
                 foundTutorialWeapon = true;
+
                 Helpers.DisplayEnterPrompt();
             }
             Console.Clear();
         }
+    }
+
+    static void GameOver() 
+    { 
+        Environment.Exit(0);
     }
 }
