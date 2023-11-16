@@ -2,30 +2,17 @@
 
 internal class Tutorial
 {
-    private static Character character;
-    private static int x = 0;
-    private static int y = 0;
-    private static string location = "laboratory";
-
-    private static int locationMaxY = 2;
-    private static int locationMinY = -2;
-    private static int locationMaxX = 2;
-    private static int locationMinX = -2;
-
-
-    static void Main() => Starter();
-
-    static void Starter()
+    public static void PlayTutorial() 
     {
-        GetName();
+        CreateCharacter();
         DisplayIntro();
-        PlayTutorial();
-
-        Game.PlayGame();
+        StartLaboratoryTutorial();
     }
 
-    static void GetName()
+    static void CreateCharacter()
     {
+        List<string> inventory = new();    
+
         while (true)
         {
             Console.WriteLine("What will you be called?");
@@ -44,7 +31,7 @@ internal class Tutorial
             Helpers.ColouredText($"{name}", ConsoleColor.Green);
             Helpers.DisplayEnterPrompt();
 
-            character = new Character(name, 10);
+            Program.character = new Character(name, 10, 1, inventory);
             break;
         }
     }
@@ -73,11 +60,11 @@ internal class Tutorial
         Helpers.DisplayEnterPrompt();
     }
 
-    static void PlayTutorial()
+    public static void StartLaboratoryTutorial()
     {
         while (true)
         {
-            DisplayPlayerInformation();
+            Game.DisplayPlayerInformation();
 
             Helpers.ColouredText("\n\nYou decide to look around the laboratory.", ConsoleColor.Yellow);
             Helpers.ColouredText("\n\nTry typing \'w\' to move up by 1 on \'y\'\n", ConsoleColor.White);
@@ -91,13 +78,13 @@ internal class Tutorial
 
                 continue;
             }
-            UpdateCoordinate(input);
+            Game.UpdateCoordinate(input);
             break;
         }
 
         while (true)
         {
-            DisplayPlayerInformation();
+            Game.DisplayPlayerInformation();
             Console.WriteLine("\n\nThis means you switched the tile your character is currently on.\nYou will encounter various things on each tile.\n\n");
 
             Console.WriteLine("Try moving to another tile:\n" +
@@ -115,11 +102,11 @@ internal class Tutorial
 
                 continue;
             }
-            UpdateCoordinate(input);
+            Game.UpdateCoordinate(input);
             break;
         }
 
-        DisplayPlayerInformation();
+        Game.DisplayPlayerInformation();
         Console.Write("\n\nHere you can see your location has updated again.\nTry exploring the rest of the laboratory.");
         Helpers.DisplayEnterPrompt();
 
@@ -127,7 +114,7 @@ internal class Tutorial
 
         while (tutorialMode) 
         {
-            DisplayPlayerInformation();
+            Game.DisplayPlayerInformation();
 
             string? input = Console.ReadLine();
 
@@ -139,24 +126,24 @@ internal class Tutorial
                 continue;
             }
 
-            if (ValidateCoordinate(input))
+            if (Game.ValidateCoordinate(input))
             {
-                UpdateCoordinate(input);
+                Game.UpdateCoordinate(input);
             };
 
-            if (x == 0 && y == 0)
+            if (Game.x == 0 && Game.y == 0)
             {
-                DisplayPlayerInformation();
+                Game.DisplayPlayerInformation();
 
                 Helpers.ColouredText("\n\nYou are back where you woke up.", ConsoleColor.Yellow);
                 Helpers.DisplayEnterPrompt();
             }
 
-            if (x == 2 && y == 2) 
+            if (Game.x == 2 && Game.y == 2) 
             {
                 while (true)
                 {
-                    DisplayPlayerInformation();
+                    Game.DisplayPlayerInformation();
 
                     Helpers.ColouredText("\n\nYou have found an exit.\nDo you leave the laboratory? ( y / n )", ConsoleColor.Green);
                     input = Console.ReadLine();
@@ -180,86 +167,5 @@ internal class Tutorial
                 }
             }
         }
-    }
-
-    static void DisplayPlayerInformation()
-    {
-        Console.Write($"Name:");
-        Helpers.ColouredText($" {character.name}", ConsoleColor.Green);
-
-        Console.Write($"\nHealth:");
-        Helpers.ColouredText($" {character.health}", ConsoleColor.Red);
-
-        Console.Write($"\n\nLocation: {location}\n");
-
-        Console.WriteLine($"Coordinates: x {x}, y {y}\n__________________________");
-    }
-
-    static void UpdateCoordinate(string coordinate)
-    {
-        switch (coordinate)
-        {
-            case "w":
-                y += 1;
-                Helpers.ColouredText($"\nYou moved from y {y - 1} to y {y}", ConsoleColor.Yellow);
-                break;
-
-            case "s":
-                y -= 1;
-                Helpers.ColouredText($"\nYou moved from y {y + 1} to y {y}", ConsoleColor.Yellow);
-                break;
-
-            case "a":
-                x -= 1;
-                Helpers.ColouredText($"\nYou moved from x {x + 1} to x {x}", ConsoleColor.Yellow);
-                break;
-
-            case "d":
-                x += 1;
-                Helpers.ColouredText($"\nYou moved from x {x - 1} to x {x}", ConsoleColor.Yellow);
-                break;
-        }
-        Helpers.DisplayEnterPrompt();
-    }
-
-    static bool ValidateCoordinate(string input) 
-    {
-        if (input == "w") 
-        {
-            if (y + 1 > locationMaxY) 
-            {
-                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
-                Helpers.DisplayEnterPrompt();
-                return false;
-            }
-        }
-        else if (input == "s")
-        {
-            if (y - 1 < locationMinY)
-            {
-                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
-                Helpers.DisplayEnterPrompt();
-                return false;
-            }
-        }
-        else if (input == "a")
-        {
-            if (x - 1 < locationMinX)
-            {
-                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
-                Helpers.DisplayEnterPrompt();
-                return false;
-            }
-        }
-        else if (input == "d")
-        {
-            if (x + 1 > locationMaxX)
-            {
-                Helpers.DisplayError($"Cannot move that way. Out of bounds for {location}");
-                Helpers.DisplayEnterPrompt();
-                return false;
-            }
-        }
-        return true;
     }
 }

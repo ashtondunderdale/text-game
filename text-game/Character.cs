@@ -4,10 +4,14 @@ internal class Character
 {
     public string name;
     public int health;
+    public int level;
+    public List<string> Inventory;
 
-    public Character(string name, int health)
+    public Character(string name, int health, int level, List<string> inventory)
     {
         this.name = name;
         this.health = health;
+        this.level = level;
+        Inventory = inventory;
     }
 }
