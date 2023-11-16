@@ -1,11 +1,11 @@
 ﻿namespace text_game;
 
-internal class Program
+internal class Tutorial
 {
     private static Character character;
     private static int x = 0;
     private static int y = 0;
-    private static string location = "laboratory:";
+    private static string location = "laboratory";
 
     private static int locationMaxY = 2;
     private static int locationMinY = -2;
@@ -18,10 +18,10 @@ internal class Program
     static void Starter()
     {
         GetName();
-        //DisplayIntro();
-        Tutorial();
+        DisplayIntro();
+        PlayTutorial();
 
-        Game();
+        Game.PlayGame();
     }
 
     static void GetName()
@@ -69,22 +69,24 @@ internal class Program
             Helpers.TypeColouredText(introLines[i], ConsoleColor.White, sleepDurations[i]);
             Thread.Sleep(i == introLines.Length - 1 ? 0 : 1500);
         }
+        Thread.Sleep(1000);
+        Helpers.DisplayEnterPrompt();
     }
 
-    static void Tutorial()
+    static void PlayTutorial()
     {
         while (true)
         {
             DisplayPlayerInformation();
 
-            Helpers.ColouredText("\n\nYou decide to look around the room.", ConsoleColor.White);
-            Helpers.ColouredText("\n\nTry typing \'u\' to move up by 1 on \'y\'\n", ConsoleColor.White);
+            Helpers.ColouredText("\n\nYou decide to look around the laboratory.", ConsoleColor.Yellow);
+            Helpers.ColouredText("\n\nTry typing \'w\' to move up by 1 on \'y\'\n", ConsoleColor.White);
 
             string? input = Console.ReadLine();
 
-            if (input != "u")
+            if (input != "w")
             {
-                Helpers.DisplayError("Please enter \'u\'.");
+                Helpers.DisplayError("Please enter \'w\'.");
                 Helpers.DisplayEnterPrompt();
 
                 continue;
@@ -99,14 +101,14 @@ internal class Program
             Console.WriteLine("\n\nThis means you switched the tile your character is currently on.\nYou will encounter various things on each tile.\n\n");
 
             Console.WriteLine("Try moving to another tile:\n" +
-                "\n\t'u' (up)     = y + 1" +
-                "\n\t'd' (down)   = y - 1" +
-                "\n\t'l' (left)   = x - 1" +
-                "\n\t'r' (right)  = x + 1");
+                "\n\t'w' (up)     = y + 1" +
+                "\n\t'a' (left)   = x - 1" +
+                "\n\t's' (down)   = y - 1" +
+                "\n\t'd' (right)  = x + 1");
 
             string? input = Console.ReadLine();
 
-            if (input != "u" && input != "d" && input != "l" && input != "r")
+            if (input != "w" && input != "a" && input != "s" && input != "d")
             {
                 Helpers.DisplayError("Please enter a valid coordinate character.");
                 Helpers.DisplayEnterPrompt();
@@ -118,7 +120,7 @@ internal class Program
         }
 
         DisplayPlayerInformation();
-        Console.WriteLine("\n\nHere you can see your location has updated again.\nTry exploring the rest of the laboratory.");
+        Console.Write("\n\nHere you can see your location has updated again.\nTry exploring the rest of the laboratory.");
         Helpers.DisplayEnterPrompt();
 
         bool tutorialMode = true;
@@ -129,7 +131,7 @@ internal class Program
 
             string? input = Console.ReadLine();
 
-            if (input != "u" && input != "d" && input != "l" && input != "r")
+            if (input != "w" && input != "a" && input != "s" && input != "d")
             {
                 Helpers.DisplayError("Please enter a valid coordinate character.");
                 Helpers.DisplayEnterPrompt();
@@ -142,9 +144,11 @@ internal class Program
                 UpdateCoordinate(input);
             };
 
-            if (x == 0 && y == 0) 
+            if (x == 0 && y == 0)
             {
-                Console.WriteLine("You are back where you woke up.");
+                DisplayPlayerInformation();
+
+                Helpers.ColouredText("\n\nYou are back where you woke up.", ConsoleColor.Yellow);
                 Helpers.DisplayEnterPrompt();
             }
 
@@ -154,7 +158,7 @@ internal class Program
                 {
                     DisplayPlayerInformation();
 
-                    Console.WriteLine("\n\nYou have found an exit.\nDo you leave the laboratory? ( y / n )");
+                    Helpers.ColouredText("\n\nYou have found an exit.\nDo you leave the laboratory? ( y / n )", ConsoleColor.Green);
                     input = Console.ReadLine();
 
                     if (input == "y") 
@@ -177,6 +181,7 @@ internal class Program
             }
         }
     }
+
     static void DisplayPlayerInformation()
     {
         Console.Write($"Name:");
@@ -194,22 +199,22 @@ internal class Program
     {
         switch (coordinate)
         {
-            case "u":
+            case "w":
                 y += 1;
                 Helpers.ColouredText($"\nYou moved from y {y - 1} to y {y}", ConsoleColor.Yellow);
                 break;
 
-            case "d":
+            case "s":
                 y -= 1;
                 Helpers.ColouredText($"\nYou moved from y {y + 1} to y {y}", ConsoleColor.Yellow);
                 break;
 
-            case "l":
+            case "a":
                 x -= 1;
                 Helpers.ColouredText($"\nYou moved from x {x + 1} to x {x}", ConsoleColor.Yellow);
                 break;
 
-            case "r":
+            case "d":
                 x += 1;
                 Helpers.ColouredText($"\nYou moved from x {x - 1} to x {x}", ConsoleColor.Yellow);
                 break;
@@ -219,7 +224,7 @@ internal class Program
 
     static bool ValidateCoordinate(string input) 
     {
-        if (input == "u") 
+        if (input == "w") 
         {
             if (y + 1 > locationMaxY) 
             {
@@ -228,7 +233,7 @@ internal class Program
                 return false;
             }
         }
-        else if (input == "d")
+        else if (input == "s")
         {
             if (y - 1 < locationMinY)
             {
@@ -237,7 +242,7 @@ internal class Program
                 return false;
             }
         }
-        else if (input == "l")
+        else if (input == "a")
         {
             if (x - 1 < locationMinX)
             {
@@ -246,7 +251,7 @@ internal class Program
                 return false;
             }
         }
-        else if (input == "r")
+        else if (input == "d")
         {
             if (x + 1 > locationMaxX)
             {
@@ -256,10 +261,5 @@ internal class Program
             }
         }
         return true;
-    }
-
-    static void Game()
-    {
-        Console.WriteLine("You are now in the game.");
     }
 }
