@@ -202,7 +202,7 @@ internal class Tutorial
                     Console.WriteLine("\t1. Attack");
                     Console.WriteLine("\t2. Flee");
 
-                    string choice = Console.ReadLine();
+                    string? choice = Console.ReadLine();
 
                     switch (choice)
                     {
@@ -233,7 +233,8 @@ internal class Tutorial
 
                     if (!mutantRat.IsAlive())
                     {
-                        Helpers.ColouredText($"\n\tYou defeated the {mutantRat.Name}!", ConsoleColor.Green);
+                        Helpers.ColouredText($"\n\n\tYou defeated the {mutantRat.Name}!", ConsoleColor.Green);
+                        Program.character.Experience += mutantRat.ExperienceOnDeath;
                     }
                     else if (!Program.character.IsAlive())
                     {

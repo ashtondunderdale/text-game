@@ -28,6 +28,9 @@ internal class Game
         Console.Write($"Name:");
         Helpers.ColouredText($" {Program.character.Name}", ConsoleColor.Green);
 
+        Console.Write($"\nLevel:");
+        Helpers.ColouredText($" {Program.character.Level}", ConsoleColor.Green);
+
         Console.Write($"\nHealth:");
         Helpers.ColouredText($" {Program.character.Health}", ConsoleColor.Red);
 

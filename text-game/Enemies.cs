@@ -5,6 +5,7 @@ internal class MutantRat
     public string Name = "Mutant Rat";
     public int Health = 3;
     public int AttackDamage = 1;
+    public int experience = 1;
 
     public void TakeDamage(int damage)
     {
