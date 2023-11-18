@@ -10,11 +10,12 @@ internal class Game
     private static int locationMaxX = 2;
     private static int locationMinX = -2;
 
-    private static string location = "wasteland";
+    private static string location = "laboratory";
 
     public static void PlayGame(Character character)
     {
         bool playingGame = true;
+        location = "wasteland";
 
         while (playingGame)
         {

@@ -1,18 +1,29 @@
-﻿namespace text_game;
-
-internal class Weapon
+﻿namespace text_game
 {
-    public string Name { get; set; }
-    public virtual int AttackDamage { get; set; }
-}
+    internal class Weapon
+    {
+        public string Name { get; set; }
+        public Weapon(string name)
+        {
+            Name = name;
+        }
 
-internal class MetalPipe : Weapon
-{
-    public override int AttackDamage { get; set; } = 3;
-}
+        public virtual int AttackDamage { get; set; }
+    }
 
-internal class Unequipped : Weapon
-{
-    public override int AttackDamage { get; set; } = 1;
-}
+    internal class MetalPipe : Weapon
+    {
+        public MetalPipe() : base("Metal Pipe") 
+        {
+            AttackDamage = 3;
+        }
+    }
 
+    internal class Unequipped : Weapon
+    {
+        public Unequipped() : base("Unequipped") 
+        {
+            AttackDamage = 1;
+        }
+    }
+}

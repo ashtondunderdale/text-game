@@ -33,7 +33,7 @@ internal class Tutorial
             Helpers.ColouredText($"{name}", ConsoleColor.Green);
             Helpers.DisplayEnterPrompt();
 
-            Program.character = new Character(name, 10, 1, inventory);
+            Program.character = new Character(name, 10, 1, inventory, 0);
             Program.character.EquipWeapon(new Unequipped());
             break;
         }
@@ -189,7 +189,7 @@ internal class Tutorial
         {
             double randomEncounterType = random.NextDouble();
 
-            if (randomEncounterType < 0.5)
+            if (randomEncounterType > 0.5)
             {
                 MutantRat mutantRat = new();
                 Helpers.ColouredText($"\n\nA {mutantRat.Name} suddenly attacks you!", ConsoleColor.Red);
@@ -249,12 +249,12 @@ internal class Tutorial
 
             else if (randomEncounterType < 0.2 && foundTutorialWeapon == false)
             {
-                Helpers.ColouredText("\n\nYou find a metal pipe on the floor!", ConsoleColor.Green);
+                Helpers.ColouredText("\n\nYou find a metal pipe on the floor!\n", ConsoleColor.Green);
                 Helpers.ColouredText("It has been automatically equipped.", ConsoleColor.Yellow);
 
-                Weapon metalPipe = new();
+                Weapon metalPipe = new MetalPipe();
+                Program.character.EquipWeapon(new MetalPipe());
                 Program.character.Inventory.Add(metalPipe.Name);
-                Program.character.EquipWeapon(metalPipe);
 
                 foundTutorialWeapon = true;
 
