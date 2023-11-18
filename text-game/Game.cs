@@ -1,30 +1,83 @@
-﻿namespace text_game;
+﻿using System;
+
+namespace text_game;
 
 internal class Game
 {
     public static int x = 0;
     public static int y = 0;
 
-    private static int locationMaxY = 2;
-    private static int locationMinY = -2;
-    private static int locationMaxX = 2;
-    private static int locationMinX = -2;
+    public static int locationMaxY = 2;
+    public static int locationMinY = -2;
+    public static int locationMaxX = 2;
+    public static int locationMinX = -2;
 
-    private static string location = "Laboratory";
+    public static string location = "Laboratory";
 
     public static void PlayGame(Character character)
     {
         bool playingGame = true;
 
-        location = "Wasteland";
-        locationMaxY = 10; locationMinY = -10;
-        locationMaxX = 10; locationMinX = -10;
 
 
         while (playingGame)
         {
+            location = "Wasteland";
+            locationMaxY = 25; locationMinY = -25;
+            locationMaxX = 25; locationMinX = -25;
+
             Console.Clear();
-            DisplayPlayerInformation();            
+            DisplayPlayerInformation();
+
+            string? input = Console.ReadLine();
+
+            if (input != "w" && input != "a" && input != "s" && input != "d" && input != "i")
+            {
+                Helpers.DisplayError("Please enter a valid coordinate or command character.");
+                Helpers.DisplayEnterPrompt();
+
+                continue;
+            }
+
+            if (ValidateCommand(input))
+            {
+                if (input != "i")
+                {
+                    UpdateCoordinate(input);
+                }
+            };
+
+            if (x == 2 && y == 2)
+            {
+                while (true)
+                {
+                    DisplayPlayerInformation();
+
+                    Helpers.ColouredText("\n\nYou are back at the laboratory, do you enter? ( y / n )", ConsoleColor.Green);
+                    Helpers.ColouredText("\n\nNote: this will replay the tutorial", ConsoleColor.Yellow);
+                    input = Console.ReadLine();
+
+                    if (input == "y")
+                    {
+                        Tutorial.tutorialMode = true;
+                        Helpers.ColouredText("\nYou entered in the laboratory.", ConsoleColor.Yellow);
+                        Helpers.DisplayEnterPrompt();
+                        Tutorial.StartLaboratoryTutorial();
+                        break;
+                    }
+                    else if (input == "n")
+                    {
+                        Helpers.ColouredText("\nYou did not enter the laboratory.", ConsoleColor.Yellow);
+                        Helpers.DisplayEnterPrompt();
+                        break;
+                    }
+                    else
+                    {
+                        Helpers.DisplayError("Enter a valid option ( y / n )");
+                        Helpers.DisplayEnterPrompt();
+                    }
+                }
+            }
         }
     }
 

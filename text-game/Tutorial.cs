@@ -4,6 +4,9 @@ namespace text_game;
 
 internal class Tutorial
 {
+    public static bool tutorialMode = true;
+    public static bool foundTutorialWeapon = false;
+
     public static void PlayTutorial()
     {
         CreateCharacter();
@@ -67,7 +70,11 @@ internal class Tutorial
     {
         Random random = new Random();
         double encounterChance = 0.4;
-        bool foundTutorialWeapon = false;
+
+        Game.locationMaxY = 2; Game.locationMinY = -2;
+        Game.locationMaxX = 2; Game.locationMinX = -2;
+        Game.x = 0; Game.y = 0;
+        Game.location = "Laboratory";
 
         while (true)
         {
@@ -100,7 +107,7 @@ internal class Tutorial
                 "\n\t'a' (left)   = x - 1" +
                 "\n\t's' (down)   = y - 1" +
                 "\n\t'd' (right)  = x + 1");
-
+            
             string? input = Console.ReadLine();
 
             if (input != "w" && input != "a" && input != "s" && input != "d")
@@ -117,8 +124,6 @@ internal class Tutorial
         Game.DisplayPlayerInformation();
         Console.Write("\n\nHere you can see your location has updated again.\nTry exploring the rest of the laboratory.");
         Helpers.DisplayEnterPrompt();
-
-        bool tutorialMode = true;
 
         while (tutorialMode)
         {
@@ -280,7 +285,6 @@ internal class Tutorial
             }
             Console.Clear();
         }
-
 
         static void GameOver()
         {
