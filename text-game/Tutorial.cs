@@ -4,7 +4,7 @@ namespace text_game;
 
 internal class Tutorial
 {
-    public static void PlayTutorial() 
+    public static void PlayTutorial()
     {
         CreateCharacter();
         //DisplayIntro();
@@ -120,7 +120,7 @@ internal class Tutorial
 
         bool tutorialMode = true;
 
-        while (tutorialMode) 
+        while (tutorialMode)
         {
             Game.DisplayPlayerInformation();
 
@@ -136,7 +136,7 @@ internal class Tutorial
 
             if (Game.ValidateCommand(input))
             {
-                if (input != "i") 
+                if (input != "i")
                 {
                     Game.UpdateCoordinate(input);
 
@@ -156,7 +156,7 @@ internal class Tutorial
                 Helpers.DisplayEnterPrompt();
             }
 
-            if (Game.x == 2 && Game.y == 2) 
+            if (Game.x == 2 && Game.y == 2)
             {
                 while (true)
                 {
@@ -165,7 +165,7 @@ internal class Tutorial
                     Helpers.ColouredText("\n\nYou have found an exit.\nDo you leave the laboratory? ( y / n )", ConsoleColor.Green);
                     input = Console.ReadLine();
 
-                    if (input == "y") 
+                    if (input == "y")
                     {
                         tutorialMode = false;
                         break;
@@ -203,27 +203,49 @@ internal class Tutorial
                     Console.WriteLine("\t2. Flee");
 
                     string? choice = Console.ReadLine();
+                    int ratDamage = mutantRat.Attack();
 
                     switch (choice)
                     {
                         case "1":
                             int playerDamage = Program.character.Attack();
                             mutantRat.TakeDamage(playerDamage);
+
                             Helpers.ColouredText($"\nYou dealt {playerDamage} damage to the {mutantRat.Name}!", ConsoleColor.Yellow);
                             Helpers.DisplayEnterPrompt();
                             break;
 
                         case "2":
-                            Helpers.ColouredText($"\nYou chose to flee from the {mutantRat.Name}.", ConsoleColor.Yellow);
-                            Helpers.DisplayEnterPrompt();
+                            double fleeChance = random.NextDouble();
+
+                            if (fleeChance > 0.5)
+                            {
+                                Helpers.ColouredText($"\nYou chose to flee from the {mutantRat.Name}.", ConsoleColor.Yellow);
+                                Helpers.DisplayEnterPrompt();
+                            }
+                            else 
+                            {
+                                Helpers.ColouredText($"\nYou chose to flee from the {mutantRat.Name}", ConsoleColor.Yellow);
+                                Helpers.ColouredText($"\n\nThe rat scratched you as you were trying to escape!\n", ConsoleColor.Red);
+                                Helpers.ColouredText($"The {mutantRat.Name} dealt {ratDamage} damage to you!\n", ConsoleColor.Red);
+                                Program.character.TakeDamage(ratDamage);
+                                Helpers.DisplayEnterPrompt();
+                            }
                             return;
 
                         default:
                             Helpers.DisplayError("Invalid choice. Please enter 1 to attack or 2 to flee.");
-                            continue; 
+                            continue;
                     }
 
-                    int ratDamage = mutantRat.Attack();
+                    if (!mutantRat.IsAlive())
+                    {
+                        Game.DisplayPlayerInformation();
+                        Helpers.ColouredText($"\n\n\tYou defeated the {mutantRat.Name}!", ConsoleColor.Green);
+                        Program.character.Experience += mutantRat.ExperienceOnDeath;
+                        break; 
+                    }
+
                     Program.character.TakeDamage(ratDamage);
                     Game.DisplayPlayerInformation();
 
@@ -231,16 +253,12 @@ internal class Tutorial
 
                     Helpers.ColouredText($"\n\tYour Health: {Program.character.Health}\n\t{mutantRat.Name}'s Health: {mutantRat.Health}", ConsoleColor.Yellow);
 
-                    if (!mutantRat.IsAlive())
-                    {
-                        Helpers.ColouredText($"\n\n\tYou defeated the {mutantRat.Name}!", ConsoleColor.Green);
-                        Program.character.Experience += mutantRat.ExperienceOnDeath;
-                    }
-                    else if (!Program.character.IsAlive())
+                    if (!Program.character.IsAlive())
                     {
                         Helpers.ColouredText($"\n\nThe {mutantRat.Name} defeated you. Game over.", ConsoleColor.Red);
                         Helpers.DisplayEnterPrompt();
                         GameOver();
+                        return;
                     }
                 }
 
@@ -262,10 +280,11 @@ internal class Tutorial
             }
             Console.Clear();
         }
-    }
 
-    static void GameOver() 
-    { 
-        Environment.Exit(0);
+
+        static void GameOver()
+        {
+            Environment.Exit(0);
+        }
     }
 }

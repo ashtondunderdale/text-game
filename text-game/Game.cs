@@ -10,12 +10,16 @@ internal class Game
     private static int locationMaxX = 2;
     private static int locationMinX = -2;
 
-    private static string location = "laboratory";
+    private static string location = "Laboratory";
 
     public static void PlayGame(Character character)
     {
         bool playingGame = true;
-        location = "wasteland";
+
+        location = "Wasteland";
+        locationMaxY = 10; locationMinY = -10;
+        locationMaxX = 10; locationMinX = -10;
+
 
         while (playingGame)
         {
@@ -37,7 +41,10 @@ internal class Game
 
         Console.Write($"\n\nLocation: {location}\n");
 
-        Console.WriteLine($"Coordinates: x {x}, y {y}\n__________________________");
+        Console.WriteLine($"Coordinates: x {x}, y {y}\n" +
+            $"\nMax x: {locationMaxX} Min x: {locationMinX}" +
+            $"\nMax y: {locationMaxY} Min y: {locationMinY}" +
+            $"\n__________________________");
     }
 
     public static void UpdateCoordinate(string coordinate)
